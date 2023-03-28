@@ -1,0 +1,1 @@
+	  a)std::launch::deferred: defer the entry function calling time to the point where the wait() or get() function of std::future is invoked.
