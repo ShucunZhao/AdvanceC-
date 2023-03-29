@@ -7,12 +7,21 @@
 
 using namespace std;
 
+class B{
+public:
+	int myThread3(char In){
+		cout<<"This is third thread... thread id is:"<<std::this_thread::get_id()<<endl;
+		cout<<"The input of thread3 is: "<<In<<endl;
+		cout<<"The third thread end... thread id is:"<<std::this_thread::get_id()<<endl;
+	}
+};
+
 class A{
 public:
-	int myThread2(int In){
-		cout<<"This is second thread..."<<endl;
-		cout<<In<<endl;
-		cout<<"The second thread end..."<<endl;
+	int myThread2(char In){
+		cout<<"This is second thread... thread id is:"<<std::this_thread::get_id()<<endl;
+		cout<<"The input of thread2 is: "<<In<<endl;
+		cout<<"The second thread end... thread id is:"<<std::this_thread::get_id()<<endl;
 	}
 
 };
@@ -35,17 +44,26 @@ int main(){
 	  ----------------------------------------------------
 	  We can pass extra parameters to std::async() whose type is launch for some special purpose:
 	  a)std::launch::deferred: defer the entry function calling time to the point where the wait() or get() function of std::future is invoked. If the wait() or get() didn't use this deferral thread won't run.
+	  b) std::launch::async: will create thread(has own thread id) when calling async() function.(And this is the default parameter of std::async()).
 	*/
 	A a;
-	int tmp = 21;
+	B b;
+	char tmp1 = 'A';
+	char tmp2 = 'B';
 	cout<<"main start... thread id is: "<<std::this_thread::get_id()<<endl;
 	std::future<int> result = std::async(myThread);
-	std::future<int> result2 = std::async(std::launch::deferred, &A::myThread2, &a, tmp);
+	std::future<int> result2 = std::async(std::launch::deferred, &A::myThread2, &a, tmp1);
+	std::future<int> result3 = std::async(std::launch::async, &B::myThread3, &b, tmp2);
+	cout<<"Something continue..."<<endl;
+	cout<<"Something continue..."<<endl;
+	cout<<"Something continue..."<<endl;
+	cout<<"Something continue..."<<endl;
 	cout<<"Something continue..."<<endl;
 	int def;
 	def = 0;
 	cout<<result.get()<<endl;//This get function will wait for thread finish to get the return result(Stuck here.)
 	cout<<"main end... thread id is: "<<std::this_thread::get_id()<<endl;
 	cout<<result2.get()<<endl;
+	cout<<result3.get()<<endl;
 	return 0;
 }
