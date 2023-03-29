@@ -1,0 +1,61 @@
+include <iostream>
+#include <cstdlib>
+#include <thread>
+#include <chrono>
+#include <mutex>
+#include <future>
+
+using namespace std;
+
+void myThread(std::promise<int> & tmp, int tar){
+	tar++;
+	tar*=10;
+	std::chrono::milliseconds dura(5000);
+	std::this_thread::sleep_for(dura);
+	int rst = tar;
+	tmp.set_value(rst);//Save result to tmp.
+}
+
+void myThread2(std::future<int> & tmp){	
+	auto result = tmp.get();
+	cout<<"myThread2 result = "<<result<<endl;
+
+}
+
+int myThread3(int In){
+	cout<<"myThread3 input: "<<In<<endl;
+	In++;
+	return In;
+}
+
+int main(){
+	/*
+		std::shared_future:
+		If use get() function within the template std::future class the data
+		if future will transfer to another place after using, so cannot use get in other thread again.
+		But std::shared_future will copy the data rather than transfer, so other place can also use get() to get the data.
+
+	 */
+	std::promise<int> myprom;
+	std::thread t1(myThread, std::ref(myprom), 180);
+	t1.join();
+
+	//Get the reuslt:
+	std::future<int> fu1 = myprom.get_future();
+	//auto result = fu1.get();
+	//cout<<"result = "<<result<<endl;
+	std::packaged_task<int(int)> mypt(myThread3);
+	std::future<int> result = mypy.get_future();
+	/*
+	bool ifValid = fu1.valid();
+	cout<<"ifValid: "<<ifValid<<endl;
+	std::shared_future<int> fu2(std::move(fu1));
+	ifValid = fu1.valid();
+	cout<<"ifValid: "<<ifValid<<endl;
+	*/
+	std::thread t2(myThread2, std::ref(fu1));
+	t2.join();
+
+	cout<<"main end: thread id is "<<std::this_thread::get_id()<<endl;
+	return 0;
+}
