@@ -24,7 +24,7 @@ int initserver(int port);
 
 int main(int argc, char*argv[]){
 	if(argc!=2){
-		printf("Usage: ./epollServer port\n");
+		printf("Usage: ./epollServer port\n");//U must open this port firewall authority!
 		return -1;
 	}
 
