@@ -41,7 +41,7 @@ int main(int argc, char * argv[]){
 	char buffer[1024];
 
 	//Step3: communicate with server, send a message and wait for replying, then send the next one.
-	for(int i=0;i<3;i++){
+	for(int i=0;i<10;i++){
 		int iret;
 		memset(buffer,0,sizeof(buffer));
 		sprintf(buffer, "This is the %d message, id%03d.", i+1, i+1);
@@ -56,6 +56,7 @@ int main(int argc, char * argv[]){
 			break;
 		}
 		printf("Receive: %s\n", buffer);
+		sleep(1);
 	}
 	
 	//Step4: Close the socket and free the source.

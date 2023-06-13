@@ -44,7 +44,7 @@ int main(int argc, char * argv[]){
 	int clientfd; //the socket of client.
 	int socklen=sizeof(struct sockaddr_in);//the size of struct sockaddr_in.
 	struct sockaddr_in clientaddr; //The address info of client.
-	clientfd = accept(listenfd, (struct sockaddr *)&clientaddr, (socklen_t*)&socklen);
+	clientfd = accept(listenfd, (struct sockaddr *)&clientaddr, (socklen_t*)&socklen);//The accept is getting a request from the ready linking queue, if the queue is empty this accept funcion will stuck here to wait.
 	printf("Client (%s) was already connected.\n", inet_ntoa(clientaddr.sin_addr));
 
 	//Step5: communicate with client, after receiving the message from client, reponse ok.
